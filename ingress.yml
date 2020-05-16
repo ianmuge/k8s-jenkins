@@ -1,0 +1,17 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress
+  namespace: devops
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  rules:
+  - host: jenkins.
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: jenkins-svc
+          servicePort: 80
