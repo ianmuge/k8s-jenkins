@@ -13,3 +13,6 @@ kubectl apply -f jenkins.yml
 kubectl apply -f ingress.yml
 ```
 Jenkins would use the default storage class in the volume clasim to store the data, you can define and deploy a custom StorageClass.
+# Configuration
+- The initial Jenkins password is acquired from the logs of the pod that has just been deployed.
+- The deployed node will act as a master, the slaves shall be created on a case-by-case basis and as required on the needed pods within K8s.
