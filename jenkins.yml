@@ -84,8 +84,6 @@ spec:
           volumeMounts:
             - name: jenkins-home
               mountPath: "/var/jenkins_home"
-            - name: docker-sock-volume
-              mountPath: /var/run/docker.sock
           readinessProbe:
               tcpSocket:
                 port: 8080
