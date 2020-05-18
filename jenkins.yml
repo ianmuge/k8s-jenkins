@@ -26,7 +26,7 @@ metadata:
   name: pv-claim
   namespace: devops
 spec:
-  # storageClassName: managed-premium-retain
+  # storageClassName: standard
   accessModes:
     - ReadWriteOnce
   resources:
@@ -55,9 +55,6 @@ spec:
         - name: jenkins-home
           persistentVolumeClaim:
             claimName: pv-claim
-        - name: docker-sock-volume
-          hostPath:
-            path: /var/run/docker.sock
       initContainers:
         - name: fix-data-permissions
           image: busybox
@@ -67,14 +64,6 @@ spec:
               mountPath: /var/jenkins_home
           securityContext:
             privileged: true
-        - name: fix-docker-permissions
-          image: busybox
-          command: ["/bin/sh", "-c","chown 1000:1000 /var/run/docker.sock"]
-          volumeMounts:
-            - name: docker-sock-volume 
-              mountPath: /var/run/docker.sock
-          securityContext:
-            privileged: true 
       containers:
         - name: jenkins
           image: jenkins/jenkins:lts
@@ -97,20 +86,18 @@ spec:
               mountPath: "/var/jenkins_home"
             - name: docker-sock-volume
               mountPath: /var/run/docker.sock
-          # securityContext:
-          #   privileged: true
-          # readinessProbe:
-          #     tcpSocket:
-          #       port: 8080
-          #     initialDelaySeconds: 30
-          #     timeoutSeconds: 10
-          #     failureThreshold: 10
-          # livenessProbe:
-          #     tcpSocket:
-          #       port: 8080
-          #     initialDelaySeconds: 30
-          #     timeoutSeconds: 10
-          #     failureThreshold: 10
+          readinessProbe:
+              tcpSocket:
+                port: 8080
+              initialDelaySeconds: 30
+              timeoutSeconds: 10
+              failureThreshold: 10
+          livenessProbe:
+              tcpSocket:
+                port: 8080
+              initialDelaySeconds: 30
+              timeoutSeconds: 10
+              failureThreshold: 10
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
